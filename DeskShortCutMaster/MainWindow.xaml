@@ -6,8 +6,42 @@
         xmlns:local="clr-namespace:DeskShortCutMaster"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="800">
     <Grid>
+        <Grid  Width="500" Height="600" Margin="300,-8,0,-7">
+            <Grid Width="320" Height="480">
+                <Border BorderBrush="Black" BorderThickness="2"/>
+            </Grid>
+            <Button Content="L1" HorizontalAlignment="Left" Height="30" Margin="24,64,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L2" HorizontalAlignment="Left" Height="30" Margin="24,120,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L3" HorizontalAlignment="Left" Height="30" Margin="24,173,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L4" HorizontalAlignment="Left" Height="30" Margin="24,230,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L5" HorizontalAlignment="Left" Height="30" Margin="24,285,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L6" HorizontalAlignment="Left" Height="30" Margin="24,343,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L7" HorizontalAlignment="Left" Height="30" Margin="24,403,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="L8" HorizontalAlignment="Left" Height="30" Margin="24,458,0,0" VerticalAlignment="Top" Width="60"/>
+
+            <Button Content="R1" HorizontalAlignment="Left" Height="30" Margin="415,64,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R2" HorizontalAlignment="Left" Height="30" Margin="415,120,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R3" HorizontalAlignment="Left" Height="30" Margin="415,173,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R4" HorizontalAlignment="Left" Height="30" Margin="415,230,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R5" HorizontalAlignment="Left" Height="30" Margin="415,285,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R6" HorizontalAlignment="Left" Height="30" Margin="415,343,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R7" HorizontalAlignment="Left" Height="30" Margin="415,403,0,0" VerticalAlignment="Top" Width="60"/>
+            <Button Content="R8" HorizontalAlignment="Left" Height="30" Margin="415,458,0,0" VerticalAlignment="Top" Width="60"/>
         
+        </Grid>
+        <TreeView Margin="0,0,500,0">
+            <TreeViewItem Header="111">
+                <TreeViewItem Header="111"/>
+                <TreeViewItem Header="222"/>
+                <TreeViewItem Header="333"/>
+            </TreeViewItem>
+            <TreeViewItem Header="222">
+                <TreeViewItem Header="111"/>
+                <TreeViewItem Header="222"/>
+                <TreeViewItem Header="333"/>
+            </TreeViewItem>
+        </TreeView>
     </Grid>
 </Window>
