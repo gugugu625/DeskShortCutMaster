@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
     <Grid>
-        <Grid  Width="500" Height="600" Margin="300,-8,0,-7">
+        <!--<Grid  Width="500" Height="600" Margin="300,-8,0,-7">
             <Grid Width="320" Height="480">
                 <Border BorderBrush="Black" BorderThickness="2"/>
             </Grid>
@@ -30,18 +30,31 @@
             <Button Content="R7" HorizontalAlignment="Left" Height="30" Margin="415,403,0,0" VerticalAlignment="Top" Width="60"/>
             <Button Content="R8" HorizontalAlignment="Left" Height="30" Margin="415,458,0,0" VerticalAlignment="Top" Width="60"/>
         
-        </Grid>
-        <TreeView Margin="0,0,500,0">
-            <TreeViewItem Header="111">
-                <TreeViewItem Header="111"/>
-                <TreeViewItem Header="222"/>
-                <TreeViewItem Header="333"/>
-            </TreeViewItem>
-            <TreeViewItem Header="222">
-                <TreeViewItem Header="111"/>
-                <TreeViewItem Header="222"/>
-                <TreeViewItem Header="333"/>
-            </TreeViewItem>
+        </Grid>-->
+        <TreeView x:Name="MenuTreeView" Margin="0,0,500
+                  ,0" SelectedItemChanged="MenuTreeView_SelectedItemChanged">
+
         </TreeView>
+        <Grid Width="120" Height="30" Margin="366,10,314,545">
+            <ComboBox HorizontalAlignment="Left" Margin="46,0,0,0" VerticalAlignment="Center" Width="60" IsEditable="True"/>
+            <Label Content="位置" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Grid Height="30" Margin="556,10,49,545">
+            <ComboBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120" IsEditable="True"/>
+            <Label Content="节点类型" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Grid Margin="342,45,258,499">
+            <ComboBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120" IsEditable="True"/>
+            <Label Content="节点动作" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Grid Height="30" Margin="556,50,49,505">
+            <TextBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120"  TextWrapping="Wrap" Text="TextBox"/>
+            <Label Content="节点数据" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Grid Height="30" Margin="366,91,49,464">
+            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Width="200"  TextWrapping="Wrap" Text="TextBox"/>
+            <Label Content="显示名称" HorizontalAlignment="Left" Margin="18,0,0,0" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Button Content="保存" HorizontalAlignment="Left" Margin="498,126,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

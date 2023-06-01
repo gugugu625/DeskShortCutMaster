@@ -11,12 +11,12 @@ namespace DeskShortCutMaster
     
     public class MenuTree
     {
-        public uint id;
-        public UInt16 DisplayPosition;
-        public string DisplayName;
-        public string NodeType;
-        public string NodeCommand;
-        public string NodeData;
+        public uint id { get; set; }
+        public UInt16 DisplayPosition { get; set; }
+        public string DisplayName { get; set; }
+        public string NodeType { get; set; }
+        public string NodeCommand { get; set; }
+        public string NodeData { get; set; }
         public MenuTree Parent;
         public List<MenuTree> children;
         public MenuTree(uint id, UInt16 pos, String display_name, String type, String command, String data, MenuTree parent = null)
@@ -31,15 +31,9 @@ namespace DeskShortCutMaster
             this.Parent = parent;
         }
 
-        public string Save()
-        {
-
-            return "";
-        }
-
         public override string ToString()
         {
-            String line = "";
+            string line = "";
             line += id.ToString() + " ";
             line += DisplayPosition.ToString() + " ";
             line += DisplayName + " ";
@@ -139,7 +133,7 @@ namespace DeskShortCutMaster
 
             foreach(MenuTree item in Menu.children)
             {
-                String line = "";
+                string line = "";
                 MenuTree p = item;
                 line += p.id.ToString() + "/";
                 line += p.DisplayPosition.ToString() + "/";
@@ -159,5 +153,6 @@ namespace DeskShortCutMaster
             GetTreeString(ROOTNode);
             return StoreResult;
         }
+
     }
 }
