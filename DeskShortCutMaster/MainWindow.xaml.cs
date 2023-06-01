@@ -113,6 +113,9 @@ namespace DeskShortCutMaster
             InitializeComponent();
             InitComboBox();
 
+            COMInit init = new COMInit();
+            init.ShowDialog();
+
             string filePath = @"./MenuData";
 
             if (!File.Exists(filePath))
