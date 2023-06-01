@@ -35,26 +35,16 @@
                   ,0" SelectedItemChanged="MenuTreeView_SelectedItemChanged">
 
         </TreeView>
-        <Grid Width="120" Height="30" Margin="366,10,314,545">
-            <ComboBox HorizontalAlignment="Left" Margin="46,0,0,0" VerticalAlignment="Center" Width="60" IsEditable="True"/>
-            <Label Content="位置" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
-        </Grid>
-        <Grid Height="30" Margin="556,10,49,545">
-            <ComboBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120" IsEditable="True"/>
-            <Label Content="节点类型" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
-        </Grid>
-        <Grid Margin="342,45,258,499">
-            <ComboBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120" IsEditable="True"/>
-            <Label Content="节点动作" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
-        </Grid>
-        <Grid Height="30" Margin="556,50,49,505">
-            <TextBox HorizontalAlignment="Left" Margin="70,0,0,0" VerticalAlignment="Center" Width="120"  TextWrapping="Wrap" Text="TextBox"/>
-            <Label Content="节点数据" HorizontalAlignment="Left" Margin="0,0,0,0" BorderBrush="{x:Null}"/>
-        </Grid>
-        <Grid Height="30" Margin="366,91,49,464">
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Width="200"  TextWrapping="Wrap" Text="TextBox"/>
-            <Label Content="显示名称" HorizontalAlignment="Left" Margin="18,0,0,0" BorderBrush="{x:Null}"/>
-        </Grid>
-        <Button Content="保存" HorizontalAlignment="Left" Margin="498,126,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="FormDisplayPosition" HorizontalAlignment="Left" Margin="417,5,0,0" VerticalAlignment="Top" Width="60"/>
+        <Label Content="位置" HorizontalAlignment="Left" Margin="347,10,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <ComboBox x:Name="FormNodeType" HorizontalAlignment="Left" Margin="631,5,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="节点类型" HorizontalAlignment="Left" Margin="561,5,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <ComboBox x:Name="FormNodeCommand" HorizontalAlignment="Left" Margin="417,50,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="节点动作" HorizontalAlignment="Left" Margin="347,50,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <TextBox x:Name="FormNodeData" HorizontalAlignment="Left" Margin="631,50,0,0" VerticalAlignment="Top" Width="120"  TextWrapping="Wrap" Text=""/>
+        <Label Content="节点数据" HorizontalAlignment="Left" Margin="561,50,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <TextBox x:Name="FormDisplayName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200"  TextWrapping="Wrap" Text="" Margin="417,91,0,0"/>
+        <Label Content="显示名称" HorizontalAlignment="Left" Margin="347,91,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <Button x:Name="FormSave" Content="保存" HorizontalAlignment="Left" Margin="517,126,0,0" VerticalAlignment="Top" Click="FormSave_Click"/>
     </Grid>
 </Window>

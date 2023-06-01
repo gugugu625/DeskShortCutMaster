@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -150,9 +151,17 @@ namespace DeskShortCutMaster
 
         public string GetSaveString()
         {
+            StoreResult = "";
             GetTreeString(ROOTNode);
             return StoreResult;
         }
-
+        public void Save()
+        {
+            string res = GetSaveString();
+            using (StreamWriter sw = new StreamWriter("./MenuData", false, Encoding.GetEncoding("UTF-8")))
+            {
+                sw.Write(res);
+            }
+        }
     }
 }
