@@ -11,8 +11,12 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="编辑">
-                    <MenuItem Header="新建子节点"></MenuItem>
-                    <MenuItem Header="删除当前节点"></MenuItem>
+                    <MenuItem Header="新建根节点" Click="MenuItem_Click_3"></MenuItem>
+                    <MenuItem Header="新建子节点" Click="MenuItem_Click"></MenuItem>
+                    <MenuItem Header="删除当前节点" Click="MenuItem_Click_2"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="高级">
+                    <MenuItem Header="复制菜单文件" Click="MenuItem_Click_1"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="关于"></MenuItem>
             </Menu>
@@ -46,11 +50,11 @@
         <ComboBox x:Name="FormDisplayPosition" HorizontalAlignment="Left" Margin="424,30,0,0" VerticalAlignment="Top" Width="60"/>
         <Label Content="位置" HorizontalAlignment="Left" Margin="354,35,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
         <ComboBox x:Name="FormNodeType" HorizontalAlignment="Left" Margin="638,30,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="节点类型" HorizontalAlignment="Left" Margin="568,30,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <Label Content="节点类型" HorizontalAlignment="Left" Margin="563,30,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
         <ComboBox x:Name="FormNodeCommand" HorizontalAlignment="Left" Margin="424,75,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="节点动作" HorizontalAlignment="Left" Margin="354,75,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
         <TextBox x:Name="FormNodeData" HorizontalAlignment="Left" Margin="638,75,0,0" VerticalAlignment="Top" Width="120"  TextWrapping="Wrap" Text=""/>
-        <Label Content="节点数据" HorizontalAlignment="Left" Margin="561,50,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
+        <Label Content="节点数据" HorizontalAlignment="Left" Margin="563,75,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
         <TextBox x:Name="FormDisplayName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200"  TextWrapping="Wrap" Text="" Margin="424,116,0,0"/>
         <Label Content="显示名称" HorizontalAlignment="Left" Margin="354,116,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>
         <Button x:Name="FormSave" Content="保存" HorizontalAlignment="Left" Margin="524,151,0,0" VerticalAlignment="Top" Click="FormSave_Click"/>

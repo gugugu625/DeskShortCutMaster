@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeskShortCutMaster"
         mc:Ignorable="d"
-        Title="AddNode" Height="180" Width="450">
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Title="AddNode" Height="200" Width="450">
     <Grid>
         <ComboBox x:Name="FormDisplayPosition" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" Width="60"/>
         <Label Content="位置" HorizontalAlignment="Left" Margin="34,15,0,0" BorderBrush="{x:Null}" VerticalAlignment="Top"/>

@@ -50,46 +50,63 @@ namespace DeskShortCutMaster
 
         public void InitComboBox()
         {
-            List<string> DisplayPositionList = new List<string>
-            {
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-            };
-
-            List<string> NodeTypeList = new List<string>
-            {
-                "List",
-            };
-
-            List<string> NodeCommandList = new List<string>
-            {
-                "",
-            };
-            foreach (string item in DisplayPositionList)
+            foreach (string item in ParameterList.DisplayPositionList)
             {
                 FormDisplayPosition.Items.Add(item);
             }
 
-            foreach (string item in NodeTypeList)
+            foreach (string item in ParameterList.NodeTypeList)
             {
                 FormNodeType.Items.Add(item);
             }
-            foreach (string item in NodeCommandList)
+            foreach (string item in ParameterList.NodeCommandList)
             {
                 FormNodeCommand.Items.Add(item);
             }
+        }
+        public void ReturnAddNode(MenuTree res)
+        {
+            uint maxid = 0;
+            foreach(var item in MainMenu.MenuList)
+            {
+                if(item.id > maxid)
+                {
+                    maxid = item.id;
+                }
+            }
+            res.id = maxid + 1;
+            TreeViewItem selectedItem = MenuTreeView.SelectedItem as TreeViewItem;
+            if (selectedItem != null)
+            {
+                MenuTree SelectedNode = selectedItem.Tag as MenuTree;
+                if (SelectedNode != null)
+                {
+                    res.Parent = SelectedNode;
+                    SelectedNode.children.Add(res);
+                    MainMenu.MenuList.Add(res);
+                }
+            }
+            MainMenu.Save();
+            DisplayInitTreeView(MainMenu);
+
+        }
+        public void ReturnAddROOTNode(MenuTree res)
+        {
+            uint maxid = 0;
+            foreach (var item in MainMenu.MenuList)
+            {
+                if (item.id > maxid)
+                {
+                    maxid = item.id;
+                }
+            }
+            res.id = maxid + 1;
+            res.Parent = MainMenu.ROOTNode;
+            MainMenu.ROOTNode.children.Add(res);
+            MainMenu.MenuList.Add(res);
+            MainMenu.Save();
+            DisplayInitTreeView(MainMenu);
+
         }
         public MainWindow()
         {
@@ -148,6 +165,44 @@ namespace DeskShortCutMaster
             }
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (MenuTreeView.SelectedItem == null)
+            {
+                return;
+            }
+            AddNode form = new AddNode();
+            form.TransfEvent += ReturnAddNode;
+            form.ShowDialog();
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetDataObject(MainMenu.GetSaveString());
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selectedItem = MenuTreeView.SelectedItem as TreeViewItem;
+            if (selectedItem != null)
+            {
+                MenuTree SelectedNode = selectedItem.Tag as MenuTree;
+                if (SelectedNode != null)
+                {
+                   SelectedNode.Parent.children.Remove(SelectedNode);
+                }
+            }
+            MainMenu.Save();
+            DisplayInitTreeView(MainMenu);
+        }
+
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            AddNode form = new AddNode();
+            form.TransfEvent += ReturnAddROOTNode;
+            form.ShowDialog();
         }
     }
 }
