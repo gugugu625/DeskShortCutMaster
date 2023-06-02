@@ -75,7 +75,7 @@ namespace DeskShortCutMaster
             }
             else if (paraPos == 2)
             {
-                Node.DisplayName = str;
+                Node.DisplayName = Encoding.UTF8.GetString(Convert.FromBase64String(str));
             }
             else if (paraPos == 3)
             {
@@ -87,7 +87,7 @@ namespace DeskShortCutMaster
             }
             else if (paraPos == 5)
             {
-                Node.NodeData = str;
+                Node.NodeData = Encoding.UTF8.GetString(Convert.FromBase64String(str));
             }
             else if (paraPos == 6)
             {
@@ -138,10 +138,10 @@ namespace DeskShortCutMaster
                 MenuTree p = item;
                 line += p.id.ToString() + "/";
                 line += p.DisplayPosition.ToString() + "/";
-                line += p.DisplayName + "/";
+                line += Convert.ToBase64String(Encoding.UTF8.GetBytes(p.DisplayName)) + "/";
                 line += p.NodeType + "/";
                 line += p.NodeCommand + "/";
-                line += p.NodeData + "/";
+                line += Convert.ToBase64String(Encoding.UTF8.GetBytes(p.NodeData)) + "/";
                 line += p.Parent.id.ToString() + "/";
                 line += "\r\n";
                 StoreResult += line;
