@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,14 @@ namespace DeskShortCutMaster
     public partial class MainWindow : System.Windows.Window
     {
         public Menu MainMenu;
+        SerialPort DevicePort;
+        System.Timers.Timer timer;
+        public void PortSendData(string str)
+        {
+            Encoding utf8 = Encoding.GetEncoding("UTF-8");
+            byte[] bytes = utf8.GetBytes(str);
+            DevicePort.Write(bytes, 0, bytes.Length);
+        }
 
         public void DisplayTreeView(TreeViewItem Parent,MenuTree Node)
         {
@@ -86,6 +95,7 @@ namespace DeskShortCutMaster
                     MainMenu.MenuList.Add(res);
                 }
             }
+            PortSendData("SetMenu" + MainMenu.GetSaveString());
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
 
@@ -104,6 +114,7 @@ namespace DeskShortCutMaster
             res.Parent = MainMenu.ROOTNode;
             MainMenu.ROOTNode.children.Add(res);
             MainMenu.MenuList.Add(res);
+            PortSendData("SetMenu" + MainMenu.GetSaveString());
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
 
@@ -116,6 +127,16 @@ namespace DeskShortCutMaster
             COMInit init = new COMInit();
             init.ShowDialog();
 
+            FileStream fileStream = new FileStream("./SerialPort.ini", FileMode.Open);
+            StreamReader sr = new StreamReader(fileStream);
+            string line;
+            if ((line = sr.ReadLine()) != null)
+            {
+                DevicePort = new SerialPort(line.Trim(), 115200, Parity.None, 8, StopBits.One);
+                DevicePort.DtrEnable = true;
+                DevicePort.DataReceived += new SerialDataReceivedEventHandler(DevicePort_DataReceived);
+                DevicePort.Open();
+            }
             string filePath = @"./MenuData";
 
             if (!File.Exists(filePath))
@@ -131,9 +152,37 @@ namespace DeskShortCutMaster
             MainMenu = new Menu();
             MainMenu.GenerateTree(fileContent);
             DisplayInitTreeView(MainMenu);
-            Console.WriteLine(MainMenu.GetSaveString());
-        }
 
+            timer = new System.Timers.Timer(1000);
+            timer.AutoReset = true;
+            timer.Enabled = true;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(SendData);
+            timer.Start();
+            //Console.WriteLine(MainMenu.GetSaveString());
+        }
+        private void SendData(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            PortSendData("HeartBeat");
+        }
+        private void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            byte[] buffer = new byte[DevicePort.BytesToRead];
+            DevicePort.Read(buffer, 0, buffer.Length);
+            string str = System.Text.Encoding.UTF8.GetString(buffer);
+            if (str.StartsWith("OpenFile"))
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(str.Replace("OpenFile", ""));
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(ex.Message);
+                }
+                
+            }
+            Console.WriteLine("[REC]"+str);
+        }
         private void MenuTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeViewItem selectedItem = e.NewValue as TreeViewItem;
@@ -166,6 +215,7 @@ namespace DeskShortCutMaster
                     SelectedNode.DisplayName = FormDisplayName.Text;
                 }
             }
+            PortSendData("SetMenu" + MainMenu.GetSaveString());
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
         }
@@ -197,6 +247,7 @@ namespace DeskShortCutMaster
                    SelectedNode.Parent.children.Remove(SelectedNode);
                 }
             }
+            PortSendData("SetMenu"+MainMenu.GetSaveString());
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
         }

@@ -28,10 +28,11 @@ namespace DeskShortCutMaster
         public static List<string> NodeTypeList = new List<string>
         {
             "List",
+            "Command",
         };
         public static List<string> NodeCommandList = new List<string>
         {
-            "",
+            "OpenFile",
         };
     }
 }

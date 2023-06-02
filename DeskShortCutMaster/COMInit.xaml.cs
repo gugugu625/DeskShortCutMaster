@@ -45,7 +45,7 @@ namespace DeskShortCutMaster
                     DateTime start = DateTime.Now;
                     while (DevicePort.BytesToRead == 0)
                     {
-                        Console.WriteLine(DevicePort.BytesToRead);
+                        //Console.WriteLine(DevicePort.BytesToRead);
                         TimeSpan pass = DateTime.Now - start;
                         if (pass.TotalMilliseconds >= 100)
                         {
