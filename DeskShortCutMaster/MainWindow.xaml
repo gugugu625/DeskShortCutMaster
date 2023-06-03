@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:DeskShortCutMaster"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="600" Width="800" Closing="Window_Closing">
     <Grid>
+        <hc:NotifyIcon x:Name="notifyicon" Text="桌面快捷方式" Token="DeskShortCut" IsBlink="false" Visibility="Visible" Icon="favicon.ico" MouseDoubleClick="notifyicon_MouseDoubleClick"/>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="编辑">

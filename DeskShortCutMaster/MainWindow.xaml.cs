@@ -1,6 +1,7 @@
 ﻿using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
@@ -150,10 +151,25 @@ namespace DeskShortCutMaster
             DisplayInitTreeView(MainMenu);
 
         }
+        public void InitNotifyIcon()
+        {
+            StackPanel subpanel = new StackPanel();
+            subpanel.Background = new SolidColorBrush(Colors.White);
+            RowDefinition subgridrow1 = new RowDefinition();
+            Button exitbutton = new Button { Content = "   退出   " };
+            exitbutton.Click += ExitButton_Click;
+            Button restartbutton = new Button { Content = "重新启动" };
+            restartbutton.Click += RestartButton_Click;
+            subpanel.Children.Add(exitbutton);
+            subpanel.Children.Add(restartbutton);
+            notifyicon.ContextContent = subpanel;
+        }
         public MainWindow()
         {
             InitializeComponent();
+            
             InitComboBox();
+            InitNotifyIcon();
 
             COMInit init = new COMInit();
             init.ShowDialog();
@@ -189,6 +205,7 @@ namespace DeskShortCutMaster
             timer.Enabled = true;
             timer.Elapsed += new System.Timers.ElapsedEventHandler(SendData);
             timer.Start();
+            
             //Console.WriteLine(MainMenu.GetSaveString());
         }
         private void SendData(object sender, System.Timers.ElapsedEventArgs e)
@@ -288,6 +305,27 @@ namespace DeskShortCutMaster
             AddNode form = new AddNode();
             form.TransfEvent += ReturnAddROOTNode;
             form.ShowDialog();
+        }
+
+        private void notifyicon_MouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            DevicePort.Close();
+            Environment.Exit(0);
+        }
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            Application.Current.Shutdown();
         }
     }
 }
