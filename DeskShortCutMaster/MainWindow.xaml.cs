@@ -30,7 +30,38 @@ namespace DeskShortCutMaster
         {
             Encoding utf8 = Encoding.GetEncoding("UTF-8");
             byte[] bytes = utf8.GetBytes(str);
-            DevicePort.Write(bytes, 0, bytes.Length);
+            if (DevicePort.IsOpen)
+            {
+                DevicePort.Write(bytes, 0, bytes.Length);
+            }
+            else
+            {
+                try
+                {
+                    FileStream fileStream = new FileStream("./SerialPort.ini", FileMode.Open);
+                    StreamReader sr = new StreamReader(fileStream);
+                    string line;
+                    if ((line = sr.ReadLine()) != null)
+                    {
+                        foreach (string vPortName in SerialPort.GetPortNames())
+                        {
+                            if (vPortName == line.Trim())
+                            {
+                                DevicePort.Open();
+                                DevicePort.Write(bytes, 0, bytes.Length);
+                                return;
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    Environment.Exit(0);
+                }
+                System.Windows.MessageBox.Show("端口关闭");
+                Environment.Exit(0);
+            }
+
         }
 
         public void DisplayTreeView(TreeViewItem Parent,MenuTree Node)
