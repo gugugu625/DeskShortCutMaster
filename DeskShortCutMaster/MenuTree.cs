@@ -9,7 +9,9 @@ using System.Xml.Linq;
 
 namespace DeskShortCutMaster
 {
-    
+    /// <summary>
+    /// 每个节点的保存信息
+    /// </summary>
     public class MenuTree
     {
         public uint id { get; set; }
@@ -52,7 +54,9 @@ namespace DeskShortCutMaster
             return line;
         }
     }
-
+    /// <summary>
+    /// 整个菜单的保存信息
+    /// </summary>
     public class Menu
     {
         public List<MenuTree> MenuList;
@@ -104,7 +108,7 @@ namespace DeskShortCutMaster
         }
         public void GenerateTree(string str)
         {
-            string[] lines = str.Split('\n');
+            string[] lines = str.Split(';');
             foreach (string line in lines)
             {
                 string iline = line.Trim();
@@ -143,7 +147,7 @@ namespace DeskShortCutMaster
                 line += p.NodeCommand + "/";
                 line += Convert.ToBase64String(Encoding.UTF8.GetBytes(p.NodeData)) + "/";
                 line += p.Parent.id.ToString() + "/";
-                line += "\r\n";
+                line += ";";
                 StoreResult += line;
                 GetTreeString(item);
             }

@@ -19,10 +19,14 @@ namespace DeskShortCutMaster
 {
     /// <summary>
     /// COMInit.xaml 的交互逻辑
+    /// 用于自动选择串口
     /// </summary>
     public partial class COMInit : Window
     {
         SerialPort DevicePort;
+        /// <summary>
+        /// 初始化界面及新进程
+        /// </summary>
         public COMInit()
         {
             InitializeComponent();
@@ -30,6 +34,9 @@ namespace DeskShortCutMaster
             Thread childThread = new Thread(childref);
             childThread.Start();
         }
+        /// <summary>
+        /// 扫描所有串口，发送获取设备名称，如果超时没有回应也视为错误设备，与结果对应时保存串口名称
+        /// </summary>
         private void ScanSerialPort()
         {
             int ScanCount = 0;
@@ -72,6 +79,7 @@ namespace DeskShortCutMaster
             }
             if (ScanCount == 0)
             {
+                //整个程序退出
                 MessageBox.Show("无法检测到设备");
                 Environment.Exit(0);
             }

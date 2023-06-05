@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DeskShortCutMaster
 {
+    /// <summary>
+    /// 静态 参数列表
+    /// </summary>
     public static class ParameterList
     {
         public static List<string> DisplayPositionList = new List<string>

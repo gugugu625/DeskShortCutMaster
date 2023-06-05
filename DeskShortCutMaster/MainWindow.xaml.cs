@@ -27,6 +27,10 @@ namespace DeskShortCutMaster
         public Menu MainMenu;
         SerialPort DevicePort;
         System.Timers.Timer timer;
+
+        /// <summary>
+        /// 向串口发送一个字符串
+        /// </summary>
         public void PortSendData(string str)
         {
             Encoding utf8 = Encoding.GetEncoding("UTF-8");
@@ -65,6 +69,9 @@ namespace DeskShortCutMaster
 
         }
 
+        /// <summary>
+        /// 用TreeView显示字符串（递归部分）
+        /// </summary>
         public void DisplayTreeView(TreeViewItem Parent,MenuTree Node)
         {
             foreach (var child in Node.children)
@@ -76,6 +83,10 @@ namespace DeskShortCutMaster
                 DisplayTreeView(childItem, child);
             }
         }
+
+        /// <summary>
+        /// 向TreeView显示字符串（初始启动）
+        /// </summary>
         public void DisplayInitTreeView(Menu MainMenu)
         {
             MenuTreeView.Items.Clear();
@@ -89,6 +100,9 @@ namespace DeskShortCutMaster
             }
         }
 
+        /// <summary>
+        /// 初始化列表
+        /// </summary>
         public void InitComboBox()
         {
             foreach (string item in ParameterList.DisplayPositionList)
@@ -105,6 +119,9 @@ namespace DeskShortCutMaster
                 FormNodeCommand.Items.Add(item);
             }
         }
+        /// <summary>
+        /// 新增节点的回调函数
+        /// </summary>
         public void ReturnAddNode(MenuTree res)
         {
             uint maxid = 0;
@@ -127,11 +144,14 @@ namespace DeskShortCutMaster
                     MainMenu.MenuList.Add(res);
                 }
             }
-            PortSendData("SetMenu" + MainMenu.GetSaveString());
+            PortSendData("SetMenuStart" + MainMenu.GetSaveString() + "SetMenuEnd");
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
 
         }
+        /// <summary>
+        /// 新增根节点的回调函数
+        /// </summary>
         public void ReturnAddROOTNode(MenuTree res)
         {
             uint maxid = 0;
@@ -146,11 +166,14 @@ namespace DeskShortCutMaster
             res.Parent = MainMenu.ROOTNode;
             MainMenu.ROOTNode.children.Add(res);
             MainMenu.MenuList.Add(res);
-            PortSendData("SetMenu" + MainMenu.GetSaveString());
+            PortSendData("SetMenuStart" + MainMenu.GetSaveString() + "SetMenuEnd");
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
 
         }
+        /// <summary>
+        /// 初始化托盘图标
+        /// </summary>
         public void InitNotifyIcon()
         {
             StackPanel subpanel = new StackPanel();
@@ -164,6 +187,9 @@ namespace DeskShortCutMaster
             subpanel.Children.Add(restartbutton);
             notifyicon.ContextContent = subpanel;
         }
+        /// <summary>
+        /// 主函数
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -172,8 +198,9 @@ namespace DeskShortCutMaster
             InitNotifyIcon();
 
             COMInit init = new COMInit();
-            init.ShowDialog();
+            init.ShowDialog();//显示串口初始化（自动选择）窗口
 
+            //读取由自动选择保存的串口
             FileStream fileStream = new FileStream("./SerialPort.ini", FileMode.Open);
             StreamReader sr = new StreamReader(fileStream);
             string line;
@@ -184,6 +211,8 @@ namespace DeskShortCutMaster
                 DevicePort.DataReceived += new SerialDataReceivedEventHandler(DevicePort_DataReceived);
                 DevicePort.Open();
             }
+
+            //检测菜单文件是否存在，否则创建
             string filePath = @"./MenuData";
 
             if (!File.Exists(filePath))
@@ -191,6 +220,7 @@ namespace DeskShortCutMaster
                 File.Create(filePath).Close();
             }
 
+            //读取整个菜单文件，之后生成树并显示
             string fileContent;
             using (StreamReader reader = new StreamReader(@"./MenuData", Encoding.UTF8))
             {
@@ -200,6 +230,7 @@ namespace DeskShortCutMaster
             MainMenu.GenerateTree(fileContent);
             DisplayInitTreeView(MainMenu);
 
+            //每一秒发送心跳包的计时器
             timer = new System.Timers.Timer(1000);
             timer.AutoReset = true;
             timer.Enabled = true;
@@ -208,10 +239,16 @@ namespace DeskShortCutMaster
             
             //Console.WriteLine(MainMenu.GetSaveString());
         }
+        /// <summary>
+        /// 发送心跳包
+        /// </summary>
         private void SendData(object sender, System.Timers.ElapsedEventArgs e)
         {
             PortSendData("HeartBeat");
         }
+        /// <summary>
+        /// 设备串口接收回调
+        /// </summary>
         private void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] buffer = new byte[DevicePort.BytesToRead];
@@ -221,7 +258,9 @@ namespace DeskShortCutMaster
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(str.Replace("OpenFile", ""));
+                    string res = str.Remove(0, 8).Trim();
+                    Console.WriteLine(res);
+                    System.Diagnostics.Process.Start(res);
                 }
                 catch (Exception ex)
                 {
@@ -231,6 +270,9 @@ namespace DeskShortCutMaster
             }
             Console.WriteLine("[REC]"+str);
         }
+        /// <summary>
+        /// TreeView选项更改事件
+        /// </summary>
         private void MenuTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeViewItem selectedItem = e.NewValue as TreeViewItem;
@@ -247,7 +289,9 @@ namespace DeskShortCutMaster
                 }
             }
         }
-
+        /// <summary>
+        /// 保存按键按下事件
+        /// </summary>
         private void FormSave_Click(object sender, RoutedEventArgs e)
         {
             TreeViewItem selectedItem = MenuTreeView.SelectedItem as TreeViewItem;
@@ -263,11 +307,13 @@ namespace DeskShortCutMaster
                     SelectedNode.DisplayName = FormDisplayName.Text;
                 }
             }
-            PortSendData("SetMenu" + MainMenu.GetSaveString());
+            PortSendData("SetMenuStart" + MainMenu.GetSaveString() + "SetMenuEnd");
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
         }
-
+        /// <summary>
+        /// 新增子节点按下事件
+        /// </summary>
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (MenuTreeView.SelectedItem == null)
@@ -278,12 +324,16 @@ namespace DeskShortCutMaster
             form.TransfEvent += ReturnAddNode;
             form.ShowDialog();
         }
-
+        /// <summary>
+        /// 复制保存字符串（调试功能
+        /// </summary>
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
             Clipboard.SetDataObject(MainMenu.GetSaveString());
         }
-
+        /// <summary>
+        /// 删除节点按下事件
+        /// </summary>
         private void MenuItem_Click_2(object sender, RoutedEventArgs e)
         {
             TreeViewItem selectedItem = MenuTreeView.SelectedItem as TreeViewItem;
@@ -295,11 +345,14 @@ namespace DeskShortCutMaster
                    SelectedNode.Parent.children.Remove(SelectedNode);
                 }
             }
-            PortSendData("SetMenu"+MainMenu.GetSaveString());
+            PortSendData("SetMenuStart" + MainMenu.GetSaveString() + "SetMenuEnd");
             MainMenu.Save();
             DisplayInitTreeView(MainMenu);
         }
 
+        /// <summary>
+        /// 新增根节点按下事件
+        /// </summary>
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
             AddNode form = new AddNode();
@@ -307,21 +360,33 @@ namespace DeskShortCutMaster
             form.ShowDialog();
         }
 
+        /// <summary>
+        /// 托盘气泡双击显示主菜单
+        /// </summary>
         private void notifyicon_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             this.Show();
         }
 
+        /// <summary>
+        /// 关闭窗口时改为隐藏主界面
+        /// </summary>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
             this.Hide();
         }
+        /// <summary>
+        /// 托盘气泡退出
+        /// </summary>
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             DevicePort.Close();
             Environment.Exit(0);
         }
+        /// <summary>
+        /// 托盘气泡重启
+        /// </summary>
         private void RestartButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(Process.GetCurrentProcess().MainModule.FileName);
