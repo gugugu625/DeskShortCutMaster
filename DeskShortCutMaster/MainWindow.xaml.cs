@@ -30,6 +30,7 @@ namespace DeskShortCutMaster
         SerialPort DevicePort;
         System.Timers.Timer timer;
         CoreAudioDevice defaultPlaybackDevice;
+        bool InitComplete = false;
 
         /// <summary>
         /// 向串口发送一个字符串
@@ -193,6 +194,7 @@ namespace DeskShortCutMaster
         public void InitAudioDevice()
         {
             defaultPlaybackDevice = new CoreAudioController().DefaultPlaybackDevice;
+            InitComplete = true;
         }
         /// <summary>
         /// 主函数
@@ -261,41 +263,59 @@ namespace DeskShortCutMaster
         /// </summary>
         private void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            byte[] buffer = new byte[DevicePort.BytesToRead];
-            DevicePort.Read(buffer, 0, buffer.Length); 
-            string str = Encoding.UTF8.GetString(buffer);
-            if (str.StartsWith("OpenFile"))
+            if (!InitComplete)
             {
-                try
+                return;
+            }
+            try
+            {
+                byte[] buffer = new byte[DevicePort.BytesToRead];
+                DevicePort.Read(buffer, 0, buffer.Length); 
+                string str = Encoding.UTF8.GetString(buffer);
+                if (str.StartsWith("OpenFile"))
                 {
-                    string res = Encoding.UTF8.GetString(Convert.FromBase64String(str.Replace("OpenFile", "").Trim()));
-                    Console.WriteLine(res);
-                    System.Diagnostics.Process.Start(res);
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(ex.Message);
-                }
+
+                        string res = Encoding.UTF8.GetString(Convert.FromBase64String(str.Replace("OpenFile", "").Trim()));
+                        Console.WriteLine(res);
+                        System.Diagnostics.Process.Start(res);
+
                 
-            }else if (str.StartsWith("IncreaseVolume"))
-            {
-                int VolumeChange = Convert.ToInt32(str.Replace("IncreaseVolume", "").Trim());
-                defaultPlaybackDevice.Volume += VolumeChange;
+                }else if (str.StartsWith("IncreaseVolume"))
+                {
+                    int VolumeChange = Convert.ToInt32(str.Replace("IncreaseVolume", "").Trim());
+                    defaultPlaybackDevice.Volume += VolumeChange;
+                }
+                else if (str.StartsWith("DecreaseVolume"))
+                {
+                    int VolumeChange = Convert.ToInt32(str.Replace("DecreaseVolume", "").Trim());
+                    defaultPlaybackDevice.Volume -= VolumeChange;
+                }
+                else if (str.StartsWith("Mute"))
+                {
+                    defaultPlaybackDevice.Mute(true);
+                }
+                else if (str.StartsWith("CancelMute"))
+                {
+                    defaultPlaybackDevice.Mute(false);
+                }
+                else if (str.StartsWith("GetVolume"))
+                {
+                    if (defaultPlaybackDevice.IsMuted)
+                    {
+                        PortSendData("ReturnVolume静音");
+                    }
+                    else
+                    {
+                        PortSendData("ReturnVolume" + defaultPlaybackDevice.Volume.ToString());
+                    }
+                }
+                Console.WriteLine("[REC]" + str);
             }
-            else if (str.StartsWith("DecreaseVolume"))
-            {
-                int VolumeChange = Convert.ToInt32(str.Replace("DecreaseVolume", "").Trim());
-                defaultPlaybackDevice.Volume -= VolumeChange;
+            catch (Exception ex)
+                {
+                System.Windows.MessageBox.Show(ex.Message);
             }
-            else if (str.StartsWith("Mute"))
-            {
-                defaultPlaybackDevice.Mute(true);
-            }
-            else if (str.StartsWith("CancelMute"))
-            {
-                defaultPlaybackDevice.Mute(false);
-            }
-            Console.WriteLine("[REC]"+str);
+            
         }
         /// <summary>
         /// TreeView选项更改事件
