@@ -19,7 +19,7 @@
                 <MenuItem Header="高级">
                     <MenuItem Header="复制菜单文件" Click="MenuItem_Click_1"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="关于"></MenuItem>
+                <MenuItem Header="关于" Click="MenuItem_Click_4"></MenuItem>
             </Menu>
         </DockPanel>
         <!--<Grid  Width="500" Height="600" Margin="300,-8,0,-7">

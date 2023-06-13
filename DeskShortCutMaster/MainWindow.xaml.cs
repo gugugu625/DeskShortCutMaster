@@ -1,4 +1,5 @@
-﻿using HandyControl.Controls;
+﻿using AudioSwitcher.AudioApi.CoreAudio;
+using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +29,7 @@ namespace DeskShortCutMaster
         public Menu MainMenu;
         SerialPort DevicePort;
         System.Timers.Timer timer;
+        CoreAudioDevice defaultPlaybackDevice;
 
         /// <summary>
         /// 向串口发送一个字符串
@@ -187,13 +190,17 @@ namespace DeskShortCutMaster
             subpanel.Children.Add(restartbutton);
             notifyicon.ContextContent = subpanel;
         }
+        public void InitAudioDevice()
+        {
+            defaultPlaybackDevice = new CoreAudioController().DefaultPlaybackDevice;
+        }
         /// <summary>
         /// 主函数
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            
+            //defaultPlaybackDevice = new CoreAudioController().DefaultPlaybackDevice;
             InitComboBox();
             InitNotifyIcon();
 
@@ -211,7 +218,10 @@ namespace DeskShortCutMaster
                 DevicePort.DataReceived += new SerialDataReceivedEventHandler(DevicePort_DataReceived);
                 DevicePort.Open();
             }
-
+            ThreadStart childref = new ThreadStart(InitAudioDevice);
+            Thread childThread = new Thread(childref);
+            childThread.Start();
+            
             //检测菜单文件是否存在，否则创建
             string filePath = @"./MenuData";
 
@@ -252,13 +262,13 @@ namespace DeskShortCutMaster
         private void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] buffer = new byte[DevicePort.BytesToRead];
-            DevicePort.Read(buffer, 0, buffer.Length);
-            string str = System.Text.Encoding.UTF8.GetString(buffer);
+            DevicePort.Read(buffer, 0, buffer.Length); 
+            string str = Encoding.UTF8.GetString(buffer);
             if (str.StartsWith("OpenFile"))
             {
                 try
                 {
-                    string res = str.Remove(0, 8).Trim();
+                    string res = Encoding.UTF8.GetString(Convert.FromBase64String(str.Replace("OpenFile", "").Trim()));
                     Console.WriteLine(res);
                     System.Diagnostics.Process.Start(res);
                 }
@@ -267,6 +277,23 @@ namespace DeskShortCutMaster
                     System.Windows.MessageBox.Show(ex.Message);
                 }
                 
+            }else if (str.StartsWith("IncreaseVolume"))
+            {
+                int VolumeChange = Convert.ToInt32(str.Replace("IncreaseVolume", "").Trim());
+                defaultPlaybackDevice.Volume += VolumeChange;
+            }
+            else if (str.StartsWith("DecreaseVolume"))
+            {
+                int VolumeChange = Convert.ToInt32(str.Replace("DecreaseVolume", "").Trim());
+                defaultPlaybackDevice.Volume -= VolumeChange;
+            }
+            else if (str.StartsWith("Mute"))
+            {
+                defaultPlaybackDevice.Mute(true);
+            }
+            else if (str.StartsWith("CancelMute"))
+            {
+                defaultPlaybackDevice.Mute(false);
             }
             Console.WriteLine("[REC]"+str);
         }
@@ -391,6 +418,12 @@ namespace DeskShortCutMaster
         {
             Process.Start(Process.GetCurrentProcess().MainModule.FileName);
             Application.Current.Shutdown();
+        }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            About form = new About();
+            form.ShowDialog();
         }
     }
 }
