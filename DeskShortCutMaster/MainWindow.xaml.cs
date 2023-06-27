@@ -275,12 +275,21 @@ namespace DeskShortCutMaster
                 if (str.StartsWith("OpenFile"))
                 {
 
-                        string res = Encoding.UTF8.GetString(Convert.FromBase64String(str.Replace("OpenFile", "").Trim()));
-                        Console.WriteLine(res);
+                    string res = Encoding.UTF8.GetString(Convert.FromBase64String(str.Replace("OpenFile", "").Trim()));
+                    Console.WriteLine(res);
+                    try
+                    {
                         System.Diagnostics.Process.Start(res);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    
 
-                
-                }else if (str.StartsWith("IncreaseVolume"))
+
+                }
+                else if (str.StartsWith("IncreaseVolume"))
                 {
                     int VolumeChange = Convert.ToInt32(str.Replace("IncreaseVolume", "").Trim());
                     defaultPlaybackDevice.Volume += VolumeChange;

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeskShortCutMaster"
         mc:Ignorable="d"
-        Title="About" Height="100" Width="200">
+        Title="About" Height="150" Width="200">
     <Grid>
         <Label Content="By GUGUGU625" Margin="0,45,0,0" VerticalAlignment="Top"/>
         <Label Content="QQ:312980373" Margin="0,10,0,0" VerticalAlignment="Top"/>
